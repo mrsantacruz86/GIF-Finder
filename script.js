@@ -29,8 +29,16 @@ function createButton(animalName){
     $button.text(animalName);
     $button.appendTo('#animal-buttons');
 }
+function refreshButtons(list){
+    $('#animal-buttons').empty();
+    for(var i = 1; i < list.length; i++){
+        createButton(list[i]);
+    }
+}
+
 
 $(document).ready(function(){
+    refreshButtons(animalArray);
     // Adding click event listen listener to all buttons
     $(".animal-button").click(function () {
         // Grabbing and storing the data-animal property value from the button
@@ -69,5 +77,6 @@ $(document).ready(function(){
         $('#search').val("");
         animalArray.push(text);
         console.log(animalArray);
+        refreshButtons(animalArray);
     });
 })
