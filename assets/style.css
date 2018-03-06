@@ -1,0 +1,10 @@
+#gifs-appear-here img {
+    margin: 5px;
+    border: 1px solid black;
+    padding: 2px;
+    max-height: 200px;
+    max-width: 200px;
+}
+.card{
+    margin-bottom: 10px;
+}
