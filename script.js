@@ -29,12 +29,23 @@ function createButton(animalName){
     $button.text(animalName);
     $button.appendTo('#animal-buttons');
 }
-function addButton(list){
+function refreshButtons(list){
+    $('#animal-buttons').empty();
+    for(var i = 1; i < list.length; i++){
         createButton(list[i]);
+    }
 }
 
 $(document).ready(function(){
-    addButton(animalArray);
+    refreshButtons(animalArray);
+    $("#add-btn").click(function (event) {
+        event.preventDefault();
+        var text = $('#search').val()
+        if(text != ""){
+            animalArray.push(text);
+            createButton(text);
+        }
+    });
     // Adding click event listen listener to all buttons
     $(".animal-btn").click(function () {
         $("#gifs-appear-here").empty();
@@ -42,36 +53,32 @@ $(document).ready(function(){
         var animal = $(this).attr("data-animal");
         // Constructing a queryURL using the animal name
         // storing the data from the AJAX request in the results variable
-        var results = apiRequest(animal,10).then(
-            function(response) {
-                console.log("llego el pollo",response)
-                // Looping through each result item
-                for (var i = 0; i < response.data.length; i++) {
-                    // Creating and storing a div tag
-                    var animalDiv = $("<div>");
-                    // Creating a paragraph tag with the result item's rating
-                    var p = $("<p>").text("Rating: " + response.data[i].rating);
-                    // Creating and storing an image tag
-                    var animalImage = $("<img>");
-                    // Setting the src attribute of the image to a property pulled off the result item
-                    animalImage.attr("src", response.data[i].images.fixed_height.url);
-                    // Appending the paragraph and image tag to the animalDiv
-                    animalDiv.append(p);
-                    animalDiv.append(animalImage);
-                    // Prependng the animalDiv to the HTML page in the "#gifs-appear-here" div
-                    $("#gifs-appear-here").prepend(animalDiv);
-                }
-            });
-    });
+        var results = apiRequest(animal,10).then(function(response) {
+            console.log("llego el pollo",response)
+            // Looping through each result item
+            for (var i = 0; i < response.data.length; i++) {
+                // Creating and storing a div tag
+                var $animalDiv = $("<div>");
+                $animalDiv.addClass("card animal-card");
+                // Creating a paragraph tag with the result item's rating
+                var p = $("<p>").text("Rating: " + response.data[i].rating);
+                // Creating and storing an image tag
+                var $animalImage = $("<img>");
+                // Setting the src attribute of the image to a property pulled off the result item
+                $animalImage.attr("src", response.data[i].fixed_height_still)
+                $animalImage.attr("gif-img", response.data[i].images.fixed_height.url);
+                
 
-    $("#add-btn").click(function (event) {
-        event.preventDefault();
-        var text = $('#search').val()
-        if(text != ""){
-            $('#search').val("");
-            animalArray.push(text);
-            console.log(animalArray);
-            addButton(animalArray);
-        }
+                // Appending the paragraph and image tag to the $animalDiv
+                $animalDiv.append(p);
+                $animalDiv.append($animalImage);
+                // Prependng the $animalDiv to the HTML page in the "#gifs-appear-here" div
+                $("#gifs-appear-here").prepend($animalDiv);
+            }
+        });
     });
+    $('.animal-card').click(function(){
+        
+    })
+
 })
