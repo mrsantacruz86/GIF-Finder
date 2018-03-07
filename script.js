@@ -46,6 +46,7 @@ $(document).ready(function(){
             createButton(text);
         }
     });
+    
     // Adding click event listen listener to all buttons
     $(".animal-btn").click(function () {
         $("#gifs-appear-here").empty();
@@ -54,31 +55,30 @@ $(document).ready(function(){
         // Constructing a queryURL using the animal name
         // storing the data from the AJAX request in the results variable
         var results = apiRequest(animal,10).then(function(response) {
-            console.log("llego el pollo",response)
-            // Looping through each result item
+            console.log("JSON Response: ",response)
             for (var i = 0; i < response.data.length; i++) {
-                // Creating and storing a div tag
-                var $animalDiv = $("<div>");
-                $animalDiv.addClass("card animal-card");
-                // Creating a paragraph tag with the result item's rating
+                var $animalDiv = $('<div>');
                 var p = $("<p>").text("Rating: " + response.data[i].rating);
-                // Creating and storing an image tag
-                var $animalImage = $("<img>");
-                // Setting the src attribute of the image to a property pulled off the result item
-                $animalImage.attr("src", response.data[i].fixed_height_still)
+                var $animalImage = $('<img class="animal-img">');
+                $animalImage.attr("src", response.data[i].images.fixed_height_still.url);
                 $animalImage.attr("gif-img", response.data[i].images.fixed_height.url);
-                
-
-                // Appending the paragraph and image tag to the $animalDiv
+                $animalImage.attr("fixed-img", response.data[i].images.fixed_height_still.url);
+                $animalImage.attr("status", "fixed")
                 $animalDiv.append(p);
                 $animalDiv.append($animalImage);
-                // Prependng the $animalDiv to the HTML page in the "#gifs-appear-here" div
                 $("#gifs-appear-here").prepend($animalDiv);
             }
         });
     });
-    $('.animal-card').click(function(){
-        
-    })
 
-})
+    $(".animal-img").click(function () {
+        if($(this).attr('status') === "fixed"){
+            $(this).attr("src", $(this).attr("gif-img"));
+            $(this).attr('status', 'animated');
+        }else{
+            $(this).attr("src", $(this).attr("fixed-img"));
+            $(this).attr('status', 'fixed');
+        }
+    });
+    
+}) //end of Document.ready()
