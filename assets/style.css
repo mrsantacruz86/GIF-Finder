@@ -1,9 +1,12 @@
-#gifs-appear-here img {
+.item {
     margin: 5px;
     border: 1px solid black;
     padding: 2px;
-    max-height: 200px;
-    max-width: 200px;
+    display: inline-block;
+}
+.item img{
+    height: 175px;
+    width: 175px;
 }
 .card{
     margin-bottom: 10px;

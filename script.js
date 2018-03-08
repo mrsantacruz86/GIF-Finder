@@ -31,7 +31,7 @@ function createButton(animalName){
 }
 function refreshButtons(list){
     $('#animal-buttons').empty();
-    for(var i = 1; i < list.length; i++){
+    for(var i = 0; i < list.length; i++){
         createButton(list[i]);
     }
 }
@@ -41,14 +41,22 @@ $(document).ready(function(){
     $("#add-btn").click(function (event) {
         event.preventDefault();
         var text = $('#search').val()
-        if(text != ""){
+        var repeated =  animalArray.indexOf(text);
+        if(text != "" && repeated === -1){
             animalArray.push(text);
-            createButton(text);
+            refreshButtons(animalArray);
+            $('#search').val("");
+        }
+        else{
+            $('#wrongEntryModal').modal({
+                keyboard: true
+              });
+            $('#search').val("");
         }
     });
     
-    // Adding click event listen listener to all buttons
-    $(".animal-btn").click(function () {
+    // Adding click event listen listener to all buttons using EVENT DELEGATION
+    $('#animal-buttons').on('click', '.animal-btn', function () { 
         $("#gifs-appear-here").empty();
         // Grabbing and storing the data-animal property value from the button
         var animal = $(this).attr("data-animal");
@@ -57,21 +65,21 @@ $(document).ready(function(){
         var results = apiRequest(animal,10).then(function(response) {
             console.log("JSON Response: ",response)
             for (var i = 0; i < response.data.length; i++) {
-                var $animalDiv = $('<div>');
+                var $animalDiv = $('<div class="item">');
                 var p = $("<p>").text("Rating: " + response.data[i].rating);
                 var $animalImage = $('<img class="animal-img">');
                 $animalImage.attr("src", response.data[i].images.fixed_height_still.url);
                 $animalImage.attr("gif-img", response.data[i].images.fixed_height.url);
                 $animalImage.attr("fixed-img", response.data[i].images.fixed_height_still.url);
                 $animalImage.attr("status", "fixed")
-                $animalDiv.append(p);
                 $animalDiv.append($animalImage);
+                $animalDiv.append(p);
                 $("#gifs-appear-here").prepend($animalDiv);
             }
         });
     });
 
-    $(".animal-img").click(function () {
+    $("#gifs-appear-here").on('click','.animal-img', function () {
         if($(this).attr('status') === "fixed"){
             $(this).attr("src", $(this).attr("gif-img"));
             $(this).attr('status', 'animated');
