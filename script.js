@@ -4,7 +4,7 @@ var animalArray = ["dog","cat", "rabbit", "hamster", "goldfish", "bird"];
 
 function apiRequest(topic, limit) {
     // API-KEY
-    var myKey = "dc6zaTOxFJmzC"
+    var myKey = "zujXUIQSkoPd6pplKEOvx5IZXkqrp1en"
     // Constructing a queryURL using the animal name
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + topic + "&api_key=" + myKey + "&limit=" + limit;
     // console.log(queryURL);
